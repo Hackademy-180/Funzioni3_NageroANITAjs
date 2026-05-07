@@ -1,171 +1,108 @@
-// Selfwork Oggetti 3
-
-
-// Crea un oggetto bowling con le seguenti caratteristiche:
-// una proprietà che comprenda una lista di giocatori
-//  con un nome
-//  e i relativi punteggi
-
-
-// diverse funzionalità tra cui:
-
-// creare 10 punteggi casuali per ogni giocatore:
-
-// Suggerimento: questo metodo dovra’ ciclare tutti i giocatori
-// presenti nell’oggetto bowling, 
-// e aggiungere ad ogni proprieta’ scores:
-// 
-// dieci punteggi casuali ad ogni giocatore
-
-
-// Per generare un punteggio casuale da 1 a 10
-//  → Math.floor(Math.random() * (10 - 1 +1) + 1)
-
-
-// trovare il punteggio finale per ogni giocatore:
-// Suggerimento: ordinare l’array in ordine Decrescente 
-// (Attenzione! E’ un array di oggetti: Array.prototype.sort() - JavaScript | MDN )
-// 
-//ggiungere un nuovo giocatore e creare 10 punti casuali anche per lui
-// determinare il vincitore
-
-                                                    // EXTRA:
-// Crea un metodo per stilare la classifica finale dei giocatori
-
-// DATI DI PARTENZA:
-// let bowling = {
-//     'players': [
-//         {'name': 'Livio', 'scores': []},
-//         {'name': 'Paola', 'scores': []},
-//         {'name': 'Filippo', 'scores': []},
-//         {'name': 'Giuseppe', 'scores': []}
-//     ],
-//     ...
-// }
-
-
-
-
-
-//INIZIO
-//Inizializza l'oggetto giocatori e bowling( creo propietà con 1 array.)
-// Contenenti array:  nome e lista punteggi vuota.
-
-let bowling = {
-    players: [
-        { name: 'Livio', scores: [], totalScore: 0 },
-        { name: 'Paola', scores: [], totalScore: 0 },
-        { name: 'Filippo', scores: [], totalScore: 0 },
-        { name: 'Giuseppe', scores: [], totalScore: 0 }
-    ],
-
-
-
-  //generare 10 passaggi casuali. 10 PUNTEGGI CASUALI per giocatore
-
-
-  // USO MATEMATICO DI E ; con ciclo 'scores' ; popolo array  di ogni patrtecipante!!
-
-
-
-setScores: function () {
-
-        this.players.forEach(player => {
-
-
-            for (let i = 0; i < 10; i++) {
-
-
-
-                let randomScore = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-
-
-
-
-                player.scores.push(randomScore);
-            }
-
-        });
-
-    },
-
-
-// CALCOLO DEI TOTALI ED ORDINO CLASSIFICA ( SOMMA DEI PUNTEGGI // ORDINO ARRAY, SCELTA: Decrescenza.)
-
-  //matematica: calcolo del punteggio -
-
-calculateFinalScores: function () {
-
-        this.players.forEach(player => {
-
-            player.totalScore = player.scores.reduce((acc, curr) => acc + curr, 0);
-
-        });
-
-    },
-
- 
-    // Ordina i giocatori in ordine decrescente
-    ranking: function () {
-
-        this.players.sort((a, b) => b.totalScore - a.totalScore);
-
-    },
-
-
-
-
-    //  aggiungi giocatore e generare i suoi punti
-
-    addPlayer: function(newName) {
-        let newPlayer = {'name': newName, 'scores': [], 
-            'totalScore': 0
-        
-        };
-        
-        // Generiamo subito i 10 punti per iniziare
-
-        for (let i = 0; i < 10; i++) {
-            
-            let randomScore = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-
-            newPlayer.scores.push(randomScore);
-
-        }
-
-        // Calcola il totale
-        newPlayer.totalScore = newPlayer.scores.reduce((acc, curr) => acc + curr, 0);
-
-        // Inserisce il nuovo giocatore
-        this.players.push(newPlayer);
-
-    },
-
-    // Determina il vincitore
-    getWinner: function () {
-
-        this.ranking();
-
-        let winner = this.players[0];
-
-        console.log(`Il vincitore è ${winner.name} con ${winner.totalScore} punti!`);
-
+const bowling = {
+  giocatori: [
+    { nome: "Livio", punteggi: [] },
+    { nome: "Paola", punteggi: [] },
+    { nome: "Filippo", punteggi: [] },
+    { nome: "Giuseppe", punteggi: [] }
+  ],
+
+  // Genera un numero casuale da 1 a 10
+  generaPunteggioCasuale() {
+    return Math.floor(Math.random() * 10) + 1;
+  },
+
+  // Crea 10 punteggi casuali per OGNI giocatore
+  genera10PunteggiPerTutti() {
+    console.log("Sto generando 10 punteggi per ogni giocatore...");
+
+    this.giocatori.forEach(giocatore => {
+      giocatore.punteggi = []; 
+
+      for (let i = 0; i < 10; i++) {
+        giocatore.punteggi.push(this.generaPunteggioCasuale());
+      }
+
+      console.log(`Punteggi di ${giocatore.nome}:`, giocatore.punteggi);
+    });
+
+    console.log("Generazione punteggi finita.\n");
+  },
+
+  // Calcola il totale di un singolo giocatore (somma dell'array)
+  calcolaTotale(giocatore) {
+    return giocatore.punteggi.reduce((somma, valore) => somma + valore, 0);
+  },
+
+  // Stampa i totali di tutti, cosi vedo output chiaro
+  stampaTotali() {
+    console.log("Totali dei giocatori:");
+    this.giocatori.forEach(giocatore => {
+      console.log(`- ${giocatore.nome}: totale = ${this.calcolaTotale(giocatore)}`);
+    });
+    console.log("");
+  },
+
+  // Aggiunge un nuovo giocatore e gli genera subito 10 punteggi
+  aggiungiGiocatore(nomeNuovo) {
+    console.log(`Aggiungo un nuovo giocatore: ${nomeNuovo}`);
+
+    const nuovoGiocatore = { nome: nomeNuovo, punteggi: [] };
+
+    for (let i = 0; i < 10; i++) {
+      nuovoGiocatore.punteggi.push(this.generaPunteggioCasuale());
     }
+
+    console.log(`Punteggi di ${nuovoGiocatore.nome}:`, nuovoGiocatore.punteggi);
+
+    this.giocatori.push(nuovoGiocatore);
+    console.log("Giocatore aggiunto.\n");
+  },
+
+  // EXTRA: crea classifica finale (ordinata per totale decrescente)
+  creaClassifica() {
+    console.log("Creo la classifica (dal migliore al peggiore)...");
+
+    // Copio l'array per non rovinare l'ordine originale
+    const copia = [...this.giocatori];
+
+    copia.sort((a, b) => this.calcolaTotale(b) - this.calcolaTotale(a));
+
+    return copia;
+  },
+
+  // Determina vincitore (primo della classifica)
+  determinaVincitore() {
+    const classifica = this.creaClassifica();
+    const vincitore = classifica[0];
+
+    console.log(
+      `Vincitore: ${vincitore.nome} con ${this.calcolaTotale(vincitore)} punti!\n`
+    );
+
+    return vincitore;
+  },
+
+  // Stampa classifica in modo leggibile
+  stampaClassifica() {
+    const classifica = this.creaClassifica();
+
+    console.log("CLASSIFICA FINALE:");
+    classifica.forEach((g, indice) => {
+      console.log(
+        `${indice + 1}) ${g.nome} - totale: ${this.calcolaTotale(g)} - punteggi: ${g.punteggi.join(", ")}`
+      );
+    });
+
+    console.log("");
+  }
 };
 
+// ESECUZIONE (step by step, cosi vedi tutto in console)
+bowling.genera10PunteggiPerTutti();
+bowling.stampaTotali();
 
+bowling.aggiungiGiocatore("Marco");
+bowling.stampaTotali();
 
-
-// ESECUZIONE
-
-bowling.setScores();
-
-bowling.calculateFinalScores();
-
-bowling.addPlayer('Marco');
-
-bowling.ranking();
-
-console.log(bowling.players);
-
-bowling.getWinner();
+bowling.stampaClassifica();
+bowling.determinaVincitore();
